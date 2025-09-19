@@ -1,0 +1,17 @@
+{
+  "WHACode12345": {
+    "used": true
+  },
+  "WHACode67890": {
+    "used": true
+  },
+  "WHACode11223": {
+    "used": false
+  },
+  "WHACode44556": {
+    "used": false
+  },
+  "WHACode77889": {
+    "used": false
+  }
+}

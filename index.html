@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WHA CODE EXCHANGE</title>
+    <style>
+        :root {
+            --main-color: #007bff;
+            --secondary-color: #6c757d;
+            --background-color: #f8f9fa;
+            --font-color: #212529;
+            --link-color: #0056b3;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .logo {
+            max-width: 250px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #6ac9c9;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 12px 25px;
+            background-color: #6ac9c9;
+            color: #074780;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #D1D5DB;
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            background-color: #ffffff;
+            color: #333;
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #ffeb3b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="https://static.wixstatic.com/media/6dcd52_59ba417e1af24aedbbcc4e1b245beee1~mv2.jpg/v1/fill/w_286,h_286,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/LOGO%20SIN%20LETRAS.jpg" alt="Logo de Waterha" class="logo">
+    <h1>WHA CODE EXCHANGE</h1>
+    
+    <button id="connectButton">Conectar Billetera</button>
+    <div id="status"></div>
+    
+    <div id="redeemSection" style="display: none;">
+        <h3>Balance de WHA: <span id="tokenBalance">0</span></h3>
+        <input type="text" id="code" placeholder="Ingresa tu código aquí">
+        <button id="redeemButton">Canjear Código</button>
+        <div id="message"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+<script>
+    const tokenContractAddress = "0xef2fb5c7a91594d4d5dd6C17aea6CdFcba75916a";
+    const tokenABI = [{"inputs":[{"internalType":"address","name":"initialOwner","type":"address"},{"internalType":"address","name":"_treasuryWallet","type":"address"},{"internalType":"address","name":"_mainWallet","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":false,"internalType":"bool","name":"excluded","type":"bool"}],"name":"ExcludedFromFeeUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"newMainWallet","type":"address"}],"name":"MainWalletUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferStarted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"burner","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"TokensBurned","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"newTreasury","type":"address"}],"name":"TreasuryWalletUpdated","type":"event"},{"inputs":[],"name":"MAX_SUPPLY","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"acceptOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"},{"internalType":"bool","name":"excluded","type":"bool"}],"name":"excludeFromFee","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"isExcludedFromFee","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"mainWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"pendingOwner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newMainWallet","type":"address"}],"name":"setMainWallet","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newTreasury","type":"address"}],"name":"setTreasuryWallet","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"treasuryWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}];
+
+    let web3;
+    let accounts;
+    let tokenContract;
+
+    const connectButton = document.getElementById('connectButton');
+    const redeemButton = document.getElementById('redeemButton');
+    const statusDiv = document.getElementById('status');
+    const tokenBalanceSpan = document.getElementById('tokenBalance');
+    const redeemSection = document.getElementById('redeemSection');
+    const messageDiv = document.getElementById('message');
+    const codeInput = document.getElementById('code');
+
+    connectButton.onclick = async () => {
+        if (typeof window.ethereum !== 'undefined') {
+            try {
+                web3 = new Web3(window.ethereum);
+                accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                statusDiv.innerHTML = `**Billetera Conectada:** ${accounts[0].substring(0, 6)}...${accounts[0].slice(-4)}`;
+                redeemSection.style.display = 'block';
+
+                tokenContract = new web3.eth.Contract(tokenABI, tokenContractAddress);
+
+                updateTokenBalance();
+
+                window.ethereum.on('accountsChanged', function (newAccounts) {
+                    if (newAccounts.length > 0) {
+                        accounts = newAccounts;
+                        statusDiv.innerHTML = `**Billetera Conectada:** ${accounts[0].substring(0, 6)}...${accounts[0].slice(-4)}`;
+                        updateTokenBalance();
+                    } else {
+                        statusDiv.textContent = "Billetera desconectada.";
+                        redeemSection.style.display = 'none';
+                    }
+                });
+                
+            } catch (error) {
+                console.error("Error al conectar la billetera:", error);
+                statusDiv.textContent = "Error al conectar. ¿Tienes una billetera activa?";
+            }
+        } else {
+            statusDiv.textContent = "Por favor, instala MetaMask para continuar.";
+        }
+    };
+
+    redeemButton.onclick = async () => {
+        const code = codeInput.value;
+        if (!code) {
+            messageDiv.textContent = "Por favor, ingresa un código.";
+            return;
+        }
+
+        messageDiv.textContent = "Canjeando...";
+
+        try {
+            // Envía una solicitud POST al servidor local para canjear el código
+            const response = await fetch('http://localhost:3000/redeem', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    code: code,
+                    walletAddress: accounts[0]
+                }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                messageDiv.textContent = `¡Canje exitoso! ${result.message}`;
+                updateTokenBalance();
+                codeInput.value = '';
+            } else {
+                messageDiv.textContent = `Error: ${result.message}`;
+            }
+
+        } catch (error) {
+            console.error("Error al canjear el código:", error);
+            messageDiv.textContent = "Error de conexión con el servidor. Asegúrate de que está corriendo.";
+        }
+    };
+
+    async function updateTokenBalance() {
+        if (tokenContract && accounts && accounts.length > 0) {
+            try {
+                const balance = await tokenContract.methods.balanceOf(accounts[0]).call();
+                tokenBalanceSpan.textContent = web3.utils.fromWei(balance, 'ether');
+            } catch (error) {
+                console.error("Error al obtener el balance:", error);
+                tokenBalanceSpan.textContent = "Error";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
