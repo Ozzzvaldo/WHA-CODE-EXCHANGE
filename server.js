@@ -144,13 +144,13 @@ app.post('/logout', (req, res) => {
         }
         res.status(200).send('Sesión cerrada con éxito.');
     });
-});
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
+app.listen:
+
+app.use(express.static(__dirname));
 });
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
 
 });
+
 
