@@ -36,7 +36,7 @@ db.serialize(() => {
 
 // Middlewares
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 app.use(session({
     secret: 'tu_clave_secreta_aqui',
     resave: false,
@@ -144,12 +144,7 @@ app.post('/logout', (req, res) => {
         }
         res.status(200).send('Sesión cerrada con éxito.');
     });
-app.listen:
-
-app.use(express.static(__dirname));
 });
-// La línea para servir los archivos estáticos
-app.use(express.static(__dirname));
 
 // El servidor se pone a escuchar en el puerto
 app.listen(PORT, () => {
