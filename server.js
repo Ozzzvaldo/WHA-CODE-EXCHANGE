@@ -146,9 +146,11 @@ app.post('/logout', (req, res) => {
     });
 });
 app.get('/', (req, res) => {
-    res.send('¡Servidor de WHA funcionando correctamente!');
+  res.sendFile(__dirname + '/index.html');
+});
 });
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
 
 });
+
