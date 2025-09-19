@@ -145,8 +145,11 @@ app.post('/logout', (req, res) => {
         res.status(200).send('Sesión cerrada con éxito.');
     });
 });
-
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 // El servidor se pone a escuchar en el puerto
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
+
