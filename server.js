@@ -148,9 +148,10 @@ app.listen:
 
 app.use(express.static(__dirname));
 });
+// La línea para servir los archivos estáticos
+app.use(express.static(__dirname));
+
+// El servidor se pone a escuchar en el puerto
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
-
 });
-
-
