@@ -145,7 +145,10 @@ app.post('/logout', (req, res) => {
         res.status(200).send('Sesión cerrada con éxito.');
     });
 });
-
+app.get('/', (req, res) => {
+    res.send('¡Servidor de WHA funcionando correctamente!');
+});
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
+
 });
